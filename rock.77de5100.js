@@ -5534,6 +5534,22 @@ exports.default = exports.gsap = gsapWithCSS;
 },{"./gsap-core.js":"node_modules/gsap/gsap-core.js","./CSSPlugin.js":"node_modules/gsap/CSSPlugin.js"}],"index.ts":[function(require,module,exports) {
 "use strict";
 
+var _elements$againButton;
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -5546,43 +5562,58 @@ Object.defineProperty(exports, "__esModule", {
 
 var gsap_1 = __importDefault(require("gsap"));
 
-var options = ["paper", "rock", "scissors"];
-var choose = document.querySelector(".choose .options");
-var userChoice = document.querySelector(".user");
-var compChoice = document.querySelector(".comp");
-var gameBoard = document.querySelector(".fight");
-var result = document.querySelector(".result");
-var againButton = document.querySelector(".again");
+var options = ['paper', 'rock', 'scissors'];
+var elements = {
+  choose: document.querySelector('.choose .options'),
+  userChoice: document.querySelector('.user'),
+  compChoice: document.querySelector('.comp'),
+  gameBoard: document.querySelector('.fight'),
+  result: document.querySelector('.result'),
+  againButton: document.querySelector('.again')
+};
 var compRepeat = 0,
     interval,
     time = 300,
     player;
 
 function playerChoose(e) {
-  var _a;
+  var _iterator = _createForOfIteratorHelper(options),
+      _step;
 
-  for (var _i = 0, options_1 = options; _i < options_1.length; _i++) {
-    var option = options_1[_i];
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var option = _step.value;
 
-    if (e.target.classList.contains(option)) {
-      userChoice.innerHTML = ((_a = e.target.parentElement) === null || _a === void 0 ? void 0 : _a.innerHTML) || "";
-      player = option;
-      gameBoard.style.zIndex = "10";
-      choose.style.opacity = "0";
-      break;
+      if (e.target.classList.contains(option)) {
+        var _elements$userChoice, _elements$userChoice2, _elements$userChoice3, _elements$userChoice4, _e$target$parentEleme;
+
+        ((_elements$userChoice = elements.userChoice) === null || _elements$userChoice === void 0 ? void 0 : _elements$userChoice.firstChild) ? (_elements$userChoice2 = elements.userChoice) === null || _elements$userChoice2 === void 0 ? void 0 : _elements$userChoice2.removeChild((_elements$userChoice3 = elements.userChoice) === null || _elements$userChoice3 === void 0 ? void 0 : _elements$userChoice3.firstChild) : null;
+        (_elements$userChoice4 = elements.userChoice) === null || _elements$userChoice4 === void 0 ? void 0 : _elements$userChoice4.insertAdjacentHTML('beforeend', ((_e$target$parentEleme = e.target.parentElement) === null || _e$target$parentEleme === void 0 ? void 0 : _e$target$parentEleme.innerHTML) || '');
+        player = option;
+        elements.gameBoard.style.zIndex = '10';
+        elements.choose.style.opacity = '0';
+        break;
+      }
     }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
   }
 
   interval = setInterval(compChoose, time);
 }
 
-document.querySelectorAll(".option i").forEach(function (element) {
-  return element.addEventListener("click", playerChoose);
+document.querySelectorAll('.option i').forEach(function (element) {
+  return element.addEventListener('click', playerChoose);
 });
 
 function compChoose() {
+  var _elements$compChoice, _elements$compChoice2, _elements$compChoice3;
+
   var rand = Math.round(Math.random() * 2);
-  compChoice.innerHTML = '<i class="fas fa-hand-' + options[rand] + '"></i>';
+  ((_elements$compChoice = elements.compChoice) === null || _elements$compChoice === void 0 ? void 0 : _elements$compChoice.firstChild) ? (_elements$compChoice2 = elements.compChoice) === null || _elements$compChoice2 === void 0 ? void 0 : _elements$compChoice2.removeChild(elements.compChoice.firstChild) : null;
+  (_elements$compChoice3 = elements.compChoice) === null || _elements$compChoice3 === void 0 ? void 0 : _elements$compChoice3.insertAdjacentHTML('beforeend', '<i class="fas fa-hand-' + options[rand] + '"></i>');
   compRepeat++;
   time += 70;
 
@@ -5595,61 +5626,68 @@ function compChoose() {
 
 function game(one, two) {
   if (winsFilters(one) === two) {
-    return "You lose :(";
+    return 'You lose :(';
   } else if (winsFilters(two) === one) {
     animation();
-    return "You win!";
+    return 'You win!';
   } else {
-    return "Draw";
+    return 'Draw';
   }
 }
 
 function winsFilters(param) {
-  var wins = [["rock", "paper"], ["paper", "scissors"], ["scissors", "rock"]];
-  return wins.filter(function (_a) {
-    var item = _a[0];
+  var wins = [['rock', 'paper'], ['paper', 'scissors'], ['scissors', 'rock']];
+  var result = wins.find(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 1),
+        item = _ref2[0];
+
     return item === param;
-  })[0][1];
+  });
+  return result ? result[1] : '';
 }
 
 function finish(winner) {
-  result.innerHTML = winner;
-  againButton.style.opacity = "1";
+  var _elements$result;
+
+  (_elements$result = elements.result) === null || _elements$result === void 0 ? void 0 : _elements$result.insertAdjacentHTML('beforeend', winner);
+  elements.againButton.style.opacity = '1';
 }
 
 function again() {
-  gameBoard.style.zIndex = "-1";
-  result.innerHTML = "";
-  againButton.style.opacity = " 0";
-  choose.style.opacity = "1";
+  var _elements$result2;
+
+  elements.gameBoard.style.zIndex = '-1';
+  (_elements$result2 = elements.result) === null || _elements$result2 === void 0 ? void 0 : _elements$result2.insertAdjacentHTML('beforeend', '');
+  elements.againButton.style.opacity = ' 0';
+  elements.choose.style.opacity = '1';
   compRepeat = 0;
-  gsap_1.default.set("svg", {
+  gsap_1.default.set('svg', {
     opacity: 0
   });
 }
 
-againButton.addEventListener("click", again);
+(_elements$againButton = elements.againButton) === null || _elements$againButton === void 0 ? void 0 : _elements$againButton.addEventListener('click', again);
 
 function animation() {
   var tl = gsap_1.default.timeline();
-  tl.set("svg", {
+  tl.set('svg', {
     opacity: 1
-  }).addLabel("party").from(".line1", {
+  }).addLabel('party').from('.line1', {
     y: -50,
     x: 50,
     scaleX: 0,
-    transformOrigin: "50% 100%",
+    transformOrigin: '50% 100%',
     duration: 0.5
-  }).from(".line2", {
+  }).from('.line2', {
     y: -50,
     x: -50,
     scaleX: 0,
-    transformOrigin: "0% 100%",
+    transformOrigin: '0% 100%',
     duration: 0.5
-  }, "party").from(".flag", {
+  }, 'party').from('.flag', {
     scale: 0,
     stagger: 0.2,
-    transformOrigin: "50% 0%",
+    transformOrigin: '50% 0%',
     duration: 0.5
   });
 }
@@ -5681,7 +5719,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52900" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64864" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
