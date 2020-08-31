@@ -5566,12 +5566,12 @@ var options = ['paper', 'rock', 'scissors'];
 var elements = {
   choose: document.querySelector('.choose .options'),
   userChoice: document.querySelector('.user'),
-  compChoice: document.querySelector('.comp'),
+  computerChoice: document.querySelector('.comp'),
   gameBoard: document.querySelector('.fight'),
   result: document.querySelector('.result'),
   againButton: document.querySelector('.again')
 };
-var compRepeat = 0,
+var computerChooseRepeat = 0,
     interval,
     time = 300,
     player;
@@ -5585,13 +5585,14 @@ function playerChoose(e) {
       var option = _step.value;
 
       if (e.target.classList.contains(option)) {
-        var _elements$userChoice, _elements$userChoice2, _elements$userChoice3, _elements$userChoice4, _e$target$parentEleme;
+        var _elements$userChoice;
 
-        ((_elements$userChoice = elements.userChoice) === null || _elements$userChoice === void 0 ? void 0 : _elements$userChoice.firstChild) ? (_elements$userChoice2 = elements.userChoice) === null || _elements$userChoice2 === void 0 ? void 0 : _elements$userChoice2.removeChild((_elements$userChoice3 = elements.userChoice) === null || _elements$userChoice3 === void 0 ? void 0 : _elements$userChoice3.firstChild) : null;
-        (_elements$userChoice4 = elements.userChoice) === null || _elements$userChoice4 === void 0 ? void 0 : _elements$userChoice4.insertAdjacentHTML('beforeend', ((_e$target$parentEleme = e.target.parentElement) === null || _e$target$parentEleme === void 0 ? void 0 : _e$target$parentEleme.innerHTML) || '');
+        elements.userChoice.innerHTML = '';
+        console.log(e.target.classList.value);
+        (_elements$userChoice = elements.userChoice) === null || _elements$userChoice === void 0 ? void 0 : _elements$userChoice.insertAdjacentHTML('beforeend', "<div class=\"".concat(e.target.classList.value, "\"></div>"));
         player = option;
-        elements.gameBoard.style.zIndex = '10';
-        elements.choose.style.opacity = '0';
+        elements.gameBoard.classList.add('moveFront');
+        elements.choose.classList.add('hide');
         break;
       }
     }
@@ -5601,33 +5602,33 @@ function playerChoose(e) {
     _iterator.f();
   }
 
-  interval = setInterval(compChoose, time);
+  interval = setInterval(computerChoose, time);
 }
 
-document.querySelectorAll('.option i').forEach(function (element) {
+document.querySelectorAll('.option').forEach(function (element) {
   return element.addEventListener('click', playerChoose);
 });
 
-function compChoose() {
-  var _elements$compChoice, _elements$compChoice2, _elements$compChoice3;
+function computerChoose() {
+  var _elements$computerCho, _elements$computerCho2, _elements$computerCho3;
 
-  var rand = Math.round(Math.random() * 2);
-  ((_elements$compChoice = elements.compChoice) === null || _elements$compChoice === void 0 ? void 0 : _elements$compChoice.firstChild) ? (_elements$compChoice2 = elements.compChoice) === null || _elements$compChoice2 === void 0 ? void 0 : _elements$compChoice2.removeChild(elements.compChoice.firstChild) : null;
-  (_elements$compChoice3 = elements.compChoice) === null || _elements$compChoice3 === void 0 ? void 0 : _elements$compChoice3.insertAdjacentHTML('beforeend', '<i class="fas fa-hand-' + options[rand] + '"></i>');
-  compRepeat++;
+  var rand = Math.round(Math.random() * (options.length - 1));
+  ((_elements$computerCho = elements.computerChoice) === null || _elements$computerCho === void 0 ? void 0 : _elements$computerCho.firstChild) ? (_elements$computerCho2 = elements.computerChoice) === null || _elements$computerCho2 === void 0 ? void 0 : _elements$computerCho2.removeChild(elements.computerChoice.firstChild) : null;
+  (_elements$computerCho3 = elements.computerChoice) === null || _elements$computerCho3 === void 0 ? void 0 : _elements$computerCho3.insertAdjacentHTML('beforeend', '<div class="option fas fa-hand-' + options[rand] + '"></div>');
+  computerChooseRepeat++;
   time += 70;
 
-  if (compRepeat == 10) {
+  if (computerChooseRepeat == 10) {
     clearInterval(interval);
     time = 300;
-    finish(game(player, options[rand]));
+    finishGame(game(player, options[rand]));
   }
 }
 
 function game(one, two) {
-  if (winsFilters(one) === two) {
+  if (filterWins(one) === two) {
     return 'You lose :(';
-  } else if (winsFilters(two) === one) {
+  } else if (filterWins(two) === one) {
     animation();
     return 'You win!';
   } else {
@@ -5635,7 +5636,7 @@ function game(one, two) {
   }
 }
 
-function winsFilters(param) {
+function filterWins(param) {
   var wins = [['rock', 'paper'], ['paper', 'scissors'], ['scissors', 'rock']];
   var result = wins.find(function (_ref) {
     var _ref2 = _slicedToArray(_ref, 1),
@@ -5643,30 +5644,30 @@ function winsFilters(param) {
 
     return item === param;
   });
-  return result ? result[1] : '';
+  return result ? result[1] : null;
 }
 
-function finish(winner) {
+function finishGame(winner) {
   var _elements$result;
 
   (_elements$result = elements.result) === null || _elements$result === void 0 ? void 0 : _elements$result.insertAdjacentHTML('beforeend', winner);
-  elements.againButton.style.opacity = '1';
+  elements.againButton.classList.remove('hide');
 }
 
-function again() {
-  var _elements$result2;
+function playAgain() {
+  var _elements$result2, _elements$result3;
 
-  elements.gameBoard.style.zIndex = '-1';
-  (_elements$result2 = elements.result) === null || _elements$result2 === void 0 ? void 0 : _elements$result2.insertAdjacentHTML('beforeend', '');
-  elements.againButton.style.opacity = ' 0';
-  elements.choose.style.opacity = '1';
-  compRepeat = 0;
+  elements.gameBoard.classList.remove('moveFront');
+  ((_elements$result2 = elements.result) === null || _elements$result2 === void 0 ? void 0 : _elements$result2.firstChild) ? (_elements$result3 = elements.result) === null || _elements$result3 === void 0 ? void 0 : _elements$result3.removeChild(elements.result.firstChild) : null;
+  elements.againButton.classList.add('hide');
+  elements.choose.classList.remove('hide');
+  computerChooseRepeat = 0;
   gsap_1.default.set('svg', {
     opacity: 0
   });
 }
 
-(_elements$againButton = elements.againButton) === null || _elements$againButton === void 0 ? void 0 : _elements$againButton.addEventListener('click', again);
+(_elements$againButton = elements.againButton) === null || _elements$againButton === void 0 ? void 0 : _elements$againButton.addEventListener('click', playAgain);
 
 function animation() {
   var tl = gsap_1.default.timeline();
@@ -5719,7 +5720,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64864" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50050" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
